@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLSSEnabler - Game Manager", "DLSSEnabler - Game Manager\DLSSEnabler - Game Manager.csproj", "{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Debug|x64.ActiveCfg = Debug|x64
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Debug|x64.Build.0 = Debug|x64
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Release|x64.ActiveCfg = Release|x64
+		{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53E0C2FA-4878-4779-8FCB-894A9D3633D7}
+	EndGlobalSection
+EndGlobal
