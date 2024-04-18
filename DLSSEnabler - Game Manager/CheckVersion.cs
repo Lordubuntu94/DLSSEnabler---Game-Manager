@@ -34,7 +34,7 @@ namespace DLSSEnabler___Game_Manager
 
                             if (currentVersion < requiredVersion)
                             {
-                                MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 Application.Exit(); // Esci direttamente dall'applicazione
                             }
                             else
@@ -104,7 +104,7 @@ namespace DLSSEnabler___Game_Manager
 
                             if (checkVersion < requiredVersion)
                             {
-                                MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 Application.Exit(); // Esci direttamente dall'applicazione
                             }
                             else
@@ -115,10 +115,14 @@ namespace DLSSEnabler___Game_Manager
 
                                     // If a new version is detected, update the label and notify the user
 
-                                    DialogResult result = MessageBox.Show("A new version is installed, would you like to update the games?", "info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                    DialogResult result = MessageBox.Show("A new version is installed, would you like to update the games?", "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                                     if (result == DialogResult.Yes)
                                     {
                                         dlssEnVerLabel.Text = currentVersion;
+
+                                        // Save the version for future runs
+                                        Properties.Settings.Default.DLSSVersion = currentVersion;
+                                        Properties.Settings.Default.Save();
 
                                         functions.UpdateMod(listView);
                                     }

@@ -746,9 +746,5 @@ namespace DLSSEnabler___Game_Manager
                 }
             };
         }
-
-
-
-
     }
 }
