@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Collections.Specialized;
 
 namespace DLSSEnabler___Game_Manager
 {
@@ -54,8 +55,10 @@ namespace DLSSEnabler___Game_Manager
                                 imageList1.Images.Add(ico.ToBitmap());
 
                                 // Create a ListViewItem with the game name and the index of the icon in the ImageList
-                                ListViewItem item = new ListViewItem(new[] { gameName });
-                                item.ImageIndex = imageList1.Images.Count - 1;
+                                ListViewItem item = new ListViewItem(new[] { gameName })
+                                {
+                                    ImageIndex = imageList1.Images.Count - 1
+                                };
 
                                 // Add the item to the ListView
                                 listView1.Items.Add(item);
@@ -241,8 +244,10 @@ namespace DLSSEnabler___Game_Manager
                                             imageList1.Images.Add(ico);
 
                                             // Create a ListViewItem with the game name and the index of the icon in the ImageList
-                                            ListViewItem item = new ListViewItem(new[] { gameName });
-                                            item.ImageIndex = imageList1.Images.Count - 1;
+                                            ListViewItem item = new ListViewItem(new[] { gameName })
+                                            {
+                                                ImageIndex = imageList1.Images.Count - 1
+                                            };
 
                                             // Add the item to the ListView
                                             listView1.Items.Add(item);
@@ -293,14 +298,24 @@ namespace DLSSEnabler___Game_Manager
         public static void FindOtherGames(ListView listView1, ImageList imageList1)
         {
             // Open a file dialog to allow the user to select games to add
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
-            openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Executable Files (*.exe)|*.exe"
+            };
 
             // Show the file dialog and check if the user has selected files
             DialogResult result = openFileDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
+                // Initialize or retrieve the StringCollection from application settings
+                StringCollection manuallyAddedGames = new StringCollection();
+
+                if (!string.IsNullOrEmpty(Properties.Settings.Default.ManuallyAddedGames))
+                {
+                    manuallyAddedGames.AddRange(Properties.Settings.Default.ManuallyAddedGames.Split(','));
+                }
+
                 // Loop through all selected files by the user
                 foreach (string exeFile in openFileDialog.FileNames)
                 {
@@ -311,12 +326,70 @@ namespace DLSSEnabler___Game_Manager
                         // Add the icon to the ImageList
                         imageList1.Images.Add(ico.ToBitmap());
 
-                        // Get the game path 
-                        string gameName = Path.GetDirectoryName(exeFile);
+                        // Get the game path without the executable name
+                        string gamePath = Path.GetDirectoryName(exeFile);
 
-                        // Create a ListViewItem with the game name and the index of the icon in the ImageList
-                        ListViewItem item = new ListViewItem(new[] { gameName });
-                        item.ImageIndex = imageList1.Images.Count - 1;
+                        // Check if the game path is not already in the StringCollection
+                        if (!manuallyAddedGames.Contains(exeFile))
+                        {
+                            // Create a ListViewItem with the game path (without the executable name) and the index of the icon in the ImageList
+                            ListViewItem item = new ListViewItem(new[] { gamePath })
+                            {
+                                ImageIndex = imageList1.Images.Count - 1,
+                                // Store the full path with the executable name as a tag
+                                Tag = exeFile
+                            };
+
+                            // Add the item to the ListView
+                            listView1.Items.Add(item);
+
+                            // Add the game path to the StringCollection
+                            manuallyAddedGames.Add(exeFile);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error adding game: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                // Save the StringCollection back to application settings
+                Properties.Settings.Default.ManuallyAddedGames = string.Join(",", manuallyAddedGames.Cast<string>().ToArray());
+                Properties.Settings.Default.Save();
+            }
+        }
+
+
+
+        // Function to initialize manually added games from application settings and populate the ListView
+        public static void InitializeManuallyAddedGames(ListView listView1, ImageList imageList1)
+        {
+            // Get the string containing manually added games from application settings
+            string manuallyAddedGamesString = Properties.Settings.Default.ManuallyAddedGames;
+
+            // Check if the string is not empty or null
+            if (!string.IsNullOrEmpty(manuallyAddedGamesString))
+            {
+                // Split the string to get individual game paths
+                string[] gamePaths = manuallyAddedGamesString.Split(',');
+
+                // Loop through each game path and add it to the ListView
+                foreach (string gamePathWithExe in gamePaths)
+                {
+                    try
+                    {
+                        // Get the game path without the executable name
+                        string gamePath = Path.GetDirectoryName(gamePathWithExe);
+
+                        // Extract the icon associated with the game path including the executable name
+                        Icon icon = Icon.ExtractAssociatedIcon(gamePathWithExe);
+                        imageList1.Images.Add(icon.ToBitmap());
+
+                        // Create a ListViewItem with the game path without the executable name and the index of the icon in the ImageList
+                        ListViewItem item = new ListViewItem(new[] { gamePath })
+                        {
+                            ImageIndex = imageList1.Images.Count - 1
+                        };
 
                         // Add the item to the ListView
                         listView1.Items.Add(item);
@@ -328,6 +401,7 @@ namespace DLSSEnabler___Game_Manager
                 }
             }
         }
+
 
         // Function to install selected mod files to the selected game folder
         public static void ModInstall(ListView listView1, Label Gpu)
@@ -486,13 +560,14 @@ namespace DLSSEnabler___Game_Manager
                     ListViewItem selectedItem = listView1.SelectedItems[0];
 
                     // Create an instance of the Editor form
-                    Editor editorForm = new Editor();
+                    Editor editorForm = new Editor
+                    {
+                        // Set the Editor form's title
+                        Text = "Customize DLSS - " + selectedItem.Text,
 
-                    // Set the Editor form's title
-                    editorForm.Text = "Customize DLSS - " + selectedItem.Text;
-
-                    // Set the Editor form's icon using the ListViewItem's icon
-                    editorForm.Icon = Icon.FromHandle(((Bitmap)selectedItem.ImageList.Images[selectedItem.ImageIndex]).GetHicon());
+                        // Set the Editor form's icon using the ListViewItem's icon
+                        Icon = Icon.FromHandle(((Bitmap)selectedItem.ImageList.Images[selectedItem.ImageIndex]).GetHicon())
+                    };
 
                     // Open the Editor form
                     editorForm.ShowDialog();

@@ -37,6 +37,8 @@ namespace DLSSEnabler___Game_Manager
             Functions.FindEpicGamesLauncherGames(listView1, imageList1);
             // Call the function to find GoG games and populate the ListView
             Functions.FindGOGGalaxyGames(listView1, imageList1);
+            // Call the function to initialize manually added games
+            Functions.InitializeManuallyAddedGames(listView1, imageList1);
             // Call the function to remove sub paths
             Functions functions = new Functions();
             functions.CleanSubPaths(listView1);
@@ -90,8 +92,7 @@ namespace DLSSEnabler___Game_Manager
         // Handler for opening the Google Sheets document
         private void GoogleDocToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item != null && item.Text == "Compatibility doc")
+            if (sender is ToolStripMenuItem item && item.Text == "Compatibility doc")
             {
                 string uri = ConfigurationManager.AppSettings["GoogleSheetsURI"];
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
@@ -101,8 +102,7 @@ namespace DLSSEnabler___Game_Manager
         // Handler for opening the Discord invite page
         private void DiscordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item != null && item.Text == "Discord")
+            if (sender is ToolStripMenuItem item && item.Text == "Discord")
             {
                 string uri = ConfigurationManager.AppSettings["DiscordURI"];
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
@@ -112,8 +112,7 @@ namespace DLSSEnabler___Game_Manager
         // Handler for opening the Nexus Mods page
         private void NexusPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item != null && item.Text == "Nexus Mods")
+            if (sender is ToolStripMenuItem item && item.Text == "Nexus Mods")
             {
                 string uri = ConfigurationManager.AppSettings["NexusModsURI"];
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
@@ -130,8 +129,7 @@ namespace DLSSEnabler___Game_Manager
         // Handler for opening Lordubuntu's GitHub page
         private void GithubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item != null && item.Text == "GitHub")
+            if (sender is ToolStripMenuItem item && item.Text == "GitHub")
             {
                 string uri = ConfigurationManager.AppSettings["GithubURI"];
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });

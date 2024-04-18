@@ -34,5 +34,17 @@ namespace DLSSEnabler___Game_Manager.Properties {
                 this["DLSSVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ManuallyAddedGames {
+            get {
+                return ((string)(this["ManuallyAddedGames"]));
+            }
+            set {
+                this["ManuallyAddedGames"] = value;
+            }
+        }
     }
 }
