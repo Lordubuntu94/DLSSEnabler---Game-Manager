@@ -85,7 +85,7 @@
             this.enableDLSS.TabIndex = 1;
             this.enableDLSS.Text = "Enable DLSS";
             this.enableDLSS.UseVisualStyleBackColor = false;
-            this.enableDLSS.Click += new System.EventHandler(this.button1_Click);
+            this.enableDLSS.Click += new System.EventHandler(this.Button1_Click);
             // 
             // GPUlabel
             // 
@@ -123,7 +123,7 @@
             this.disableDLSS.TabIndex = 5;
             this.disableDLSS.Text = "Disable DLSS";
             this.disableDLSS.UseVisualStyleBackColor = false;
-            this.disableDLSS.Click += new System.EventHandler(this.button1_Click_1);
+            this.disableDLSS.Click += new System.EventHandler(this.Button1_Click_1);
             // 
             // label1
             // 
@@ -153,7 +153,7 @@
             this.browse.TabIndex = 8;
             this.browse.Text = "Browse";
             this.browse.UseVisualStyleBackColor = true;
-            this.browse.Click += new System.EventHandler(this.browse_Click);
+            this.browse.Click += new System.EventHandler(this.Browse_Click);
             // 
             // editIni
             // 
@@ -163,7 +163,7 @@
             this.editIni.TabIndex = 9;
             this.editIni.Text = "Customize DLSS";
             this.editIni.UseVisualStyleBackColor = true;
-            this.editIni.Click += new System.EventHandler(this.editIni_Click);
+            this.editIni.Click += new System.EventHandler(this.EditIni_Click);
             // 
             // exit
             // 
@@ -173,7 +173,7 @@
             this.exit.TabIndex = 10;
             this.exit.Text = "Exit";
             this.exit.UseVisualStyleBackColor = true;
-            this.exit.Click += new System.EventHandler(this.exit_Click);
+            this.exit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // menuStrip1
             // 
@@ -204,7 +204,7 @@
             this.googleDocToolStripMenuItem.Name = "googleDocToolStripMenuItem";
             this.googleDocToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.googleDocToolStripMenuItem.Text = "Compatibility doc";
-            this.googleDocToolStripMenuItem.Click += new System.EventHandler(this.googleDocToolStripMenuItem_Click);
+            this.googleDocToolStripMenuItem.Click += new System.EventHandler(this.GoogleDocToolStripMenuItem_Click);
             // 
             // discordToolStripMenuItem
             // 
@@ -212,7 +212,7 @@
             this.discordToolStripMenuItem.Name = "discordToolStripMenuItem";
             this.discordToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.discordToolStripMenuItem.Text = "Discord";
-            this.discordToolStripMenuItem.Click += new System.EventHandler(this.discordToolStripMenuItem_Click);
+            this.discordToolStripMenuItem.Click += new System.EventHandler(this.DiscordToolStripMenuItem_Click);
             // 
             // nexusPageToolStripMenuItem
             // 
@@ -220,7 +220,7 @@
             this.nexusPageToolStripMenuItem.Name = "nexusPageToolStripMenuItem";
             this.nexusPageToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.nexusPageToolStripMenuItem.Text = "Nexus Mods";
-            this.nexusPageToolStripMenuItem.Click += new System.EventHandler(this.nexusPageToolStripMenuItem_Click);
+            this.nexusPageToolStripMenuItem.Click += new System.EventHandler(this.NexusPageToolStripMenuItem_Click);
             // 
             // githubToolStripMenuItem
             // 
@@ -228,7 +228,7 @@
             this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
             this.githubToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.githubToolStripMenuItem.Text = "Github";
-            this.githubToolStripMenuItem.Click += new System.EventHandler(this.githubToolStripMenuItem_Click);
+            this.githubToolStripMenuItem.Click += new System.EventHandler(this.GithubToolStripMenuItem_Click);
             // 
             // logsToolStripMenuItem
             // 
@@ -243,7 +243,7 @@
             this.dLSSEnablerLogToolStripMenuItem.Name = "dLSSEnablerLogToolStripMenuItem";
             this.dLSSEnablerLogToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.dLSSEnablerLogToolStripMenuItem.Text = "DLSS Enabler Log";
-            this.dLSSEnablerLogToolStripMenuItem.Click += new System.EventHandler(this.dLSSEnablerLogToolStripMenuItem_Click);
+            this.dLSSEnablerLogToolStripMenuItem.Click += new System.EventHandler(this.DLSSEnablerLogToolStripMenuItem_Click);
             // 
             // extraToolStripMenuItem
             // 
@@ -258,7 +258,7 @@
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
             this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
             // 
             // buyCoffee
             // 
@@ -270,7 +270,7 @@
             this.buyCoffee.TabIndex = 12;
             this.buyCoffee.TabStop = false;
             this.toolTip1.SetToolTip(this.buyCoffee, "If you like my mod and what I do, offer me a coffe :)");
-            this.buyCoffee.Click += new System.EventHandler(this.buyCoffee_Click);
+            this.buyCoffee.Click += new System.EventHandler(this.BuyCoffee_Click);
             // 
             // sortBox
             // 
@@ -283,7 +283,7 @@
             this.sortBox.Name = "sortBox";
             this.sortBox.Size = new System.Drawing.Size(89, 21);
             this.sortBox.TabIndex = 13;
-            this.sortBox.SelectedIndexChanged += new System.EventHandler(this.sortBox_SelectedIndexChanged);
+            this.sortBox.SelectedIndexChanged += new System.EventHandler(this.SortBox_SelectedIndexChanged);
             // 
             // dlssEnVer
             // 

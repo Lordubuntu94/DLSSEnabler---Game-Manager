@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -9,7 +10,7 @@ namespace DLSSEnabler___Game_Manager
     public partial class Main : Form
     {
         // Set flag to check red highlight for games with mod not updated
-        bool checkUpdate = false;
+        readonly bool checkUpdate = false;
         public Main()
         {
             InitializeComponent();
@@ -36,8 +37,6 @@ namespace DLSSEnabler___Game_Manager
             Functions.FindEpicGamesLauncherGames(listView1, imageList1);
             // Call the function to find GoG games and populate the ListView
             Functions.FindGOGGalaxyGames(listView1, imageList1);
-            // Call the function to remove duplicate paths
-            //Functions.RemoveDuplicatePaths(listView1);
             // Call the function to remove sub paths
             Functions functions = new Functions();
             functions.CleanSubPaths(listView1);
@@ -59,28 +58,28 @@ namespace DLSSEnabler___Game_Manager
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             // Call the function to install mod files for the selected game
-            Functions.modInstall(listView1, GPUlabel);
+            Functions.ModInstall(listView1, GPUlabel);
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void Button1_Click_1(object sender, EventArgs e)
         {
             // Call the function to uninstall mod files for the selected game
-            Functions.modUninstall(listView1);
+            Functions.ModUninstall(listView1);
         }
 
-        private void exit_Click(object sender, EventArgs e)
+        private void Exit_Click(object sender, EventArgs e)
         {
             // Close the application
             Application.Exit();
         }
 
-        private void browse_Click(object sender, EventArgs e)
+        private void Browse_Click(object sender, EventArgs e)
         {
             // Call the function to find games from other sources and add them to the ListView
-            Functions.findOtherGames(listView1, imageList1);
+            Functions.FindOtherGames(listView1, imageList1);
             // Re-initialize the game list and search functionality after adding new games
             Functions functions = new Functions();
             functions.InitializeGameListAndSearch(listView1, searchBox);
@@ -88,58 +87,67 @@ namespace DLSSEnabler___Game_Manager
             functions.ScanAndHighlightPaths(listView1, checkUpdate);
         }
 
-        //  Open google doc web page
-        private void googleDocToolStripMenuItem_Click(object sender, EventArgs e)
+        // Handler for opening the Google Sheets document
+        private void GoogleDocToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item != null && item.Text == "Compatibility doc")
             {
-                Process.Start(new ProcessStartInfo("https://docs.google.com/spreadsheets/d/1qsvM0uRW-RgAYsOVprDWK2sjCqHnd_1teYAx00_TwUY/edit#gid=0") { UseShellExecute = true });
+                string uri = ConfigurationManager.AppSettings["GoogleSheetsURI"];
+                Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
         }
 
-        // Open discord server invite page
-        private void discordToolStripMenuItem_Click(object sender, EventArgs e)
+        // Handler for opening the Discord invite page
+        private void DiscordToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item != null && item.Text == "Discord")
             {
-                Process.Start(new ProcessStartInfo("https://discord.com/invite/2JDHx6kcXB") { UseShellExecute = true });
+                string uri = ConfigurationManager.AppSettings["DiscordURI"];
+                Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
         }
 
-        // Open nexus mod page
-        private void nexusPageToolStripMenuItem_Click(object sender, EventArgs e)
+        // Handler for opening the Nexus Mods page
+        private void NexusPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item != null && item.Text == "Nexus Mods")
             {
-                Process.Start(new ProcessStartInfo("https://www.nexusmods.com/site/mods/757?tab=description") { UseShellExecute = true });
+                string uri = ConfigurationManager.AppSettings["NexusModsURI"];
+                Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
         }
 
-        // Open buy me a coffe artur's page
-        private void buyCoffee_Click(object sender, EventArgs e)
+        // Handler for opening the Buy Me a Coffee page
+        private void BuyCoffee_Click(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo("https://buymeacoffee.com/a.r.t.u.r?t=true") { UseShellExecute = true });
+            string uri = ConfigurationManager.AppSettings["BuyCoffeeURI"];
+            Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
         }
 
-        // Open Lordubuntu's github page
-        private void githubToolStripMenuItem_Click(object sender, EventArgs e)
+        // Handler for opening Lordubuntu's GitHub page
+        private void GithubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo("https://github.com/Lordubuntu94/DLSSEnabler---Game-Manager") { UseShellExecute = true });
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if (item != null && item.Text == "GitHub")
+            {
+                string uri = ConfigurationManager.AppSettings["GithubURI"];
+                Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
+            }
         }
 
 
 
-        private void editIni_Click(object sender, EventArgs e)
+        private void EditIni_Click(object sender, EventArgs e)
         {
             // Call the function to customize DLSS settings
             Functions functions = new Functions();
-            functions.customizeDLSS(listView1);
+            functions.CustomizeDLSS(listView1);
         }
 
-        private void sortBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void SortBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sortBox.Text.Equals("Sort A - Z"))
             {
@@ -153,7 +161,7 @@ namespace DLSSEnabler___Game_Manager
             }
         }
 
-        private void dLSSEnablerLogToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DLSSEnablerLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Check if a game is selected in the ListView
             if (listView1.SelectedItems.Count > 0)
@@ -187,7 +195,7 @@ namespace DLSSEnabler___Game_Manager
             }
         }
 
-        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CheckForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult = MessageBox.Show("The application will be restarted. Are you sure?", "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 

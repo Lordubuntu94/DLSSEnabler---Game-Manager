@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace DLSSEnabler___Game_Manager
 {
-    internal class CheckVersion
+    internal static class CheckVersion
     {
         // Method to read the version from the text file and update the label
         public static void UpdateVersionLabel(Label dlssEnVerLabel)
@@ -21,28 +21,37 @@ namespace DLSSEnabler___Game_Manager
                     // Read the first line from the text file
                     string firstLine = File.ReadLines(filePath).FirstOrDefault();
 
-                    // Extract the version from the first line
-                    string[] parts = firstLine.Split(new[] { "v" }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length > 1)
+                    // Check if the firstLine is not null
+                    if (firstLine != null)
                     {
-                        string version = parts[1].Trim();
-                        Version currentVersion = new Version(version);
-                        Version requiredVersion = new Version("2.90.700");  // Min version accepted
-
-                        if (currentVersion < requiredVersion)
+                        // Extract the version from the first line
+                        string[] parts = firstLine.Split(new[] { "v" }, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length > 1)
                         {
-                            MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            Application.Exit(); // Esci direttamente dall'applicazione
-                        }
-                        else
-                        {
-                            // Update the label with the version
-                            dlssEnVerLabel.Text = version;
+                            string version = parts[1].Trim();
+                            Version currentVersion = new Version(version);
+                            Version requiredVersion = new Version("2.90.700");  // Min version accepted
 
-                            // Save the version for future runs
-                            Properties.Settings.Default.DLSSVersion = version;
-                            Properties.Settings.Default.Save();
+                            if (currentVersion < requiredVersion)
+                            {
+                                MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                Application.Exit(); // Esci direttamente dall'applicazione
+                            }
+                            else
+                            {
+                                // Update the label with the version
+                                dlssEnVerLabel.Text = version;
+
+                                // Save the version for future runs
+                                Properties.Settings.Default.DLSSVersion = version;
+                                Properties.Settings.Default.Save();
+                            }
                         }
+                    }
+                    else
+                    {
+                        // If the file exists but is empty, display "N/A" in the label
+                        dlssEnVerLabel.Text = "version not found - place the manager near the README file";
                     }
                 }
                 else
@@ -58,6 +67,7 @@ namespace DLSSEnabler___Game_Manager
             }
         }
 
+
         // Method to check for a new version based on the version in the text file
         public static void CheckForNewVersion(Label dlssEnVerLabel, ListView listView)
         {
@@ -71,47 +81,54 @@ namespace DLSSEnabler___Game_Manager
                 // Check if the file exists
                 if (File.Exists(filePath))
                 {
-                    // Read the first line from the text file
-                    string firstLine = File.ReadLines(filePath).FirstOrDefault();
+                    // Read all lines from the text file
+                    string[] lines = File.ReadAllLines(filePath);
 
-                    // Extract the version from the first line
-                    string[] parts = firstLine.Split(new[] { "v" }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length > 1)
+                    // Check if the array is not empty
+                    if (lines.Length > 0)
                     {
-                        string currentVersion = parts[1].Trim();
+                        // Get the first line from the text file
+                        string firstLine = lines[0];
 
-                        // Get the last saved version
-                        string lastSavedVersion = Properties.Settings.Default.DLSSVersion;
-
-                        Version checkVersion = new Version(currentVersion);
-                        Version requiredVersion = new Version("2.90.700");  // Min version accepted
-
-                        if (checkVersion < requiredVersion)
+                        // Extract the version from the first line
+                        string[] parts = firstLine.Split(new[] { "v" }, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length > 1)
                         {
-                            MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            Application.Exit(); // Esci direttamente dall'applicazione
-                        }
-                        else
-                        {
-                            // Compare the current version with the last saved version
-                            if (!string.IsNullOrEmpty(lastSavedVersion) && currentVersion != lastSavedVersion)
+                            string currentVersion = parts[1].Trim();
+
+                            // Get the last saved version
+                            string lastSavedVersion = Properties.Settings.Default.DLSSVersion;
+
+                            Version checkVersion = new Version(currentVersion);
+                            Version requiredVersion = new Version("2.90.700");  // Min version accepted
+
+                            if (checkVersion < requiredVersion)
                             {
-
-                                // If a new version is detected, update the label and notify the user
-
-                                DialogResult result = MessageBox.Show("A new version is installed, would you like to update the games?", "info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                                if (result == DialogResult.Yes)
+                                MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                Application.Exit(); // Esci direttamente dall'applicazione
+                            }
+                            else
+                            {
+                                // Compare the current version with the last saved version
+                                if (!string.IsNullOrEmpty(lastSavedVersion) && currentVersion != lastSavedVersion)
                                 {
-                                    dlssEnVerLabel.Text = currentVersion;
 
-                                    functions.updateMod(listView);
-                                }
-                                else
-                                {
-                                    functions.ScanAndHighlightPaths(listView, true);
-                                }
+                                    // If a new version is detected, update the label and notify the user
 
-                                // You can add code here to notify the user about the new version (e.g., using a notification icon)
+                                    DialogResult result = MessageBox.Show("A new version is installed, would you like to update the games?", "info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                    if (result == DialogResult.Yes)
+                                    {
+                                        dlssEnVerLabel.Text = currentVersion;
+
+                                        functions.UpdateMod(listView);
+                                    }
+                                    else
+                                    {
+                                        functions.ScanAndHighlightPaths(listView, true);
+                                    }
+
+                                    // You can add code here to notify the user about the new version (e.g., using a notification icon)
+                                }
                             }
                         }
                     }
@@ -123,5 +140,6 @@ namespace DLSSEnabler___Game_Manager
                 MessageBox.Show("An error occurred while checking for a new version: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

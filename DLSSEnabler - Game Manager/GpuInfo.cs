@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Management;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace DLSSEnabler___Game_Manager
 {
@@ -16,7 +17,7 @@ namespace DLSSEnabler___Game_Manager
         }
     }
 
-    internal class GpuHelper
+    internal static class GpuHelper
     {
         public static GpuInfo GetPrimaryGpuInfo()
         {
@@ -26,7 +27,7 @@ namespace DLSSEnabler___Game_Manager
             {
                 // Query WMI to retrieve information about video controllers
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
-                foreach (ManagementObject obj in searcher.Get())
+                foreach (ManagementObject obj in searcher.Get().OfType<ManagementObject>())
                 {
                     // Get the name of the GPU
                     gpuInfo.Name = obj["Name"]?.ToString();
@@ -53,7 +54,7 @@ namespace DLSSEnabler___Game_Manager
         }
     }
 
-    internal class GpuInfoManager
+    internal static class GpuInfoManager
     {
         public static void FindGpuArchitecture(Label GPUlabel)
         {

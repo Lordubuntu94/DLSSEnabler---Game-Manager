@@ -14,9 +14,7 @@
         {
             // // Per aggiungere gestori eventi per il salvataggio e la modifica delle impostazioni, rimuovere il commento dalle righe seguenti:
             //
-            // this.SettingChanging += this.SettingChangingEventHandler;
             //
-            // this.SettingsSaving += this.SettingsSavingEventHandler;
             //
         }
 

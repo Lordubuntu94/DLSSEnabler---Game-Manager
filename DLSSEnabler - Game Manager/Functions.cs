@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace DLSSEnabler___Game_Manager
 {
     internal class Functions
     {
-        private List<ListViewItem> originalItems = new List<ListViewItem>();
+        private readonly List<ListViewItem> originalItems = new List<ListViewItem>();
 
         // Function to find Steam games and populate the ListView with game names
         public static void FindSteamGames(ListView listView1, ImageList imageList1)
@@ -120,52 +121,47 @@ namespace DLSSEnabler___Game_Manager
                     // Read all lines from the configuration file
                     string[] lines = File.ReadAllLines(epicGamesConfigPath);
 
-                    // Search for the line containing DefaultAppInstallLocation
-                    foreach (string line in lines)
+                    // Use Array.Find to locate the first line that contains DefaultAppInstallLocation
+                    string line = Array.Find(lines, l => l.Contains("DefaultAppInstallLocation="));
+
+                    if (line != null)
                     {
-                        // Check if the line contains DefaultAppInstallLocation
-                        if (line.Contains("DefaultAppInstallLocation="))
+                        // Extract the install location from the line
+                        string searchPath = line.Split('=')[1].Trim();
+
+                        // Check if the install location is valid
+                        if (!string.IsNullOrEmpty(searchPath) && Directory.Exists(searchPath))
                         {
-                            // Extract the install location from the line
-                            string searchPath = line.Split('=')[1].Trim();
+                            var gameDirs = Directory.GetDirectories(searchPath);
+                            imageList1.ImageSize = new Size(32, 32); // Set the size of the icons
 
-                            // Check if the install location is valid
-                            if (!string.IsNullOrEmpty(searchPath) && Directory.Exists(searchPath))
+                            foreach (var dir in gameDirs)
                             {
-                                var gameDirs = Directory.GetDirectories(searchPath);
-                                imageList1.ImageSize = new Size(32, 32); // Set the size of the icons
-
-                                foreach (var dir in gameDirs)
+                                var exeFiles = Directory.GetFiles(dir, "*.exe", SearchOption.TopDirectoryOnly);
+                                foreach (var exeFile in exeFiles)
                                 {
-                                    var exeFiles = Directory.GetFiles(dir, "*.exe", SearchOption.TopDirectoryOnly);
-                                    foreach (var exeFile in exeFiles)
+                                    try
                                     {
-                                        try
+                                        // Exclude certain paths
+                                        if (IsExcludedPathEpic(dir))
                                         {
-                                            // Exclude certain paths
-                                            if (IsExcludedPathEpic(dir))
-                                            {
-                                                continue;
-                                            }
-
-                                            Icon icon = Icon.ExtractAssociatedIcon(exeFile);
-                                            imageList1.Images.Add(icon.ToBitmap());
-
-                                            string gameName = Path.GetFileNameWithoutExtension(exeFile);
-                                            ListViewItem item = new ListViewItem(new[] { exeFile }) { ImageIndex = imageList1.Images.Count - 1 };
-                                            listView.Items.Add(item);
+                                            continue;
                                         }
-                                        catch (Exception ex)
-                                        {
-                                            MessageBox.Show($"Error adding game: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                        }
+
+                                        Icon icon = Icon.ExtractAssociatedIcon(exeFile);
+                                        imageList1.Images.Add(icon.ToBitmap());
+
+                                        ListViewItem item = new ListViewItem(new[] { exeFile }) { ImageIndex = imageList1.Images.Count - 1 };
+                                        listView.Items.Add(item);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MessageBox.Show($"Error adding game: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                 }
-
-                                listView.SmallImageList = imageList1;
-
-                                break; // Exit the loop after finding the install location
                             }
+
+                            listView.SmallImageList = imageList1;
                         }
                     }
                 }
@@ -175,6 +171,7 @@ namespace DLSSEnabler___Game_Manager
                 MessageBox.Show($"Error finding Epic Games Launcher games: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
         // Function to check if a path should be excluded for Epic Games Launcher games
@@ -293,7 +290,7 @@ namespace DLSSEnabler___Game_Manager
 
 
         // Function to find games from other sources and populate the ListView with game names
-        public static void findOtherGames(ListView listView1, ImageList imageList1)
+        public static void FindOtherGames(ListView listView1, ImageList imageList1)
         {
             // Open a file dialog to allow the user to select games to add
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -333,7 +330,7 @@ namespace DLSSEnabler___Game_Manager
         }
 
         // Function to install selected mod files to the selected game folder
-        public static void modInstall(ListView listView1, Label Gpu)
+        public static void ModInstall(ListView listView1, Label Gpu)
         {
             // Check if a game is selected in the ListView
             if (listView1.SelectedItems.Count > 0)
@@ -383,7 +380,7 @@ namespace DLSSEnabler___Game_Manager
         }
 
         // Function to uninstall mod files for the selected game
-        public static void modUninstall(ListView listView1)
+        public static void ModUninstall(ListView listView1)
         {
             // Check if a game is selected in the ListView
             if (listView1.SelectedItems.Count > 0)
@@ -431,33 +428,31 @@ namespace DLSSEnabler___Game_Manager
         }
 
         // Function to filter and display games based on search text
-        public void researchGame(ListView listView1, TextBox searchBox)
+        public void ResearchGame(ListView listView1, TextBox searchBox)
         {
             string searchText = searchBox.Text.ToLower();
 
             listView1.Items.Clear(); // Clear the current items for the new search
 
+            IEnumerable<ListViewItem> filteredItems;
+
             if (string.IsNullOrWhiteSpace(searchText))
             {
                 // If the search box is empty, restore the original view
-                foreach (ListViewItem item in originalItems)
-                {
-                    listView1.Items.Add((ListViewItem)item.Clone());
-                }
+                filteredItems = originalItems;
             }
             else
             {
                 // Filter and display only the items that match the search
-                foreach (ListViewItem item in originalItems)
-                {
-                    if (item.Text.ToLower().Contains(searchText))
-                    {
-                        listView1.Items.Add((ListViewItem)item.Clone());
-                    }
-                }
+                filteredItems = originalItems.Where(item => item.Text.ToLower().Contains(searchText));
             }
 
+            foreach (ListViewItem item in filteredItems)
+            {
+                listView1.Items.Add((ListViewItem)item.Clone());
+            }
         }
+
 
         // Function to initialize the game list and search box
         public void InitializeGameListAndSearch(ListView listView1, TextBox searchBox)
@@ -471,11 +466,11 @@ namespace DLSSEnabler___Game_Manager
             }
 
             // Use a lambda expression as a wrapper
-            searchBox.TextChanged += (sender, e) => researchGame(listView1, searchBox);
+            searchBox.TextChanged += (sender, e) => ResearchGame(listView1, searchBox);
         }
 
         // Function to customize DLSS settings for the selected game
-        public void customizeDLSS(ListView listView1)
+        public void CustomizeDLSS(ListView listView1)
         {
             // Check if a game is selected in the ListView
             if (listView1.SelectedItems.Count > 0)
@@ -516,6 +511,9 @@ namespace DLSSEnabler___Game_Manager
         // Function to clean sub-paths
         public void CleanSubPaths(ListView listView)
         {
+            List<int> indicesToRemove = new List<int>();
+
+            // Doppio ciclo per confrontare gli elementi
             for (int i = 0; i < listView.Items.Count - 1; i++)
             {
                 string path1 = listView.Items[i].SubItems[0].Text; // Path of the first item
@@ -527,18 +525,19 @@ namespace DLSSEnabler___Game_Manager
                     // Check if the path of the first item is contained in the path of the second item
                     if (path2.Contains(path1))
                     {
-                        // Remove the first item from the ListView
-                        listView.Items.RemoveAt(i);
-
-                        // Decrement the index so that the outer loop continues with the next item
-                        i--;
-
-                        // Exit the inner loop
-                        break;
+                        indicesToRemove.Add(i);
+                        break; // Break the inner loop once a removal is determined
                     }
                 }
             }
+
+            // Removing items from the listview by index, from largest to smallest to avoid shifting issues
+            foreach (int index in indicesToRemove.OrderByDescending(x => x))
+            {
+                listView.Items.RemoveAt(index);
+            }
         }
+
 
 
 
@@ -574,7 +573,7 @@ namespace DLSSEnabler___Game_Manager
 
 
         // Massive update function for previously modded games
-        public void updateMod(ListView listView)
+        public void UpdateMod(ListView listView)
         {
             // Scans each item in the ListView
             foreach (ListViewItem item in listView.Items)
