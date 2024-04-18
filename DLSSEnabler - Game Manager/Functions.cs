@@ -361,7 +361,6 @@ namespace DLSSEnabler___Game_Manager
 
 
 
-        // Function to initialize manually added games from application settings and populate the ListView
         public static void InitializeManuallyAddedGames(ListView listView1, ImageList imageList1)
         {
             // Get the string containing manually added games from application settings
@@ -373,7 +372,10 @@ namespace DLSSEnabler___Game_Manager
                 // Split the string to get individual game paths
                 string[] gamePaths = manuallyAddedGamesString.Split(',');
 
-                // Loop through each game path and add it to the ListView
+                // Create a list to store the valid game paths
+                List<string> validGamePaths = new List<string>();
+
+                // Loop through each game path and check if it exists on the PC
                 foreach (string gamePathWithExe in gamePaths)
                 {
                     try
@@ -381,24 +383,53 @@ namespace DLSSEnabler___Game_Manager
                         // Get the game path without the executable name
                         string gamePath = Path.GetDirectoryName(gamePathWithExe);
 
-                        // Extract the icon associated with the game path including the executable name
-                        Icon icon = Icon.ExtractAssociatedIcon(gamePathWithExe);
-                        imageList1.Images.Add(icon.ToBitmap());
-
-                        // Create a ListViewItem with the game path without the executable name and the index of the icon in the ImageList
-                        ListViewItem item = new ListViewItem(new[] { gamePath })
+                        // Check if the directory exists
+                        if (Directory.Exists(gamePath))
                         {
-                            ImageIndex = imageList1.Images.Count - 1
-                        };
+                            // Extract the icon associated with the game path including the executable name
+                            Icon icon = Icon.ExtractAssociatedIcon(gamePathWithExe);
+                            imageList1.Images.Add(icon.ToBitmap());
 
-                        // Add the item to the ListView
-                        listView1.Items.Add(item);
+                            // Create a ListViewItem with the game path without the executable name and the index of the icon in the ImageList
+                            ListViewItem item = new ListViewItem(new[] { gamePath })
+                            {
+                                ImageIndex = imageList1.Images.Count - 1
+                            };
+
+                            // Add the item to the ListView
+                            listView1.Items.Add(item);
+
+                            // Add the valid game path to the list
+                            validGamePaths.Add(gamePathWithExe);
+                        }
+                        else
+                        {
+                            // Game directory doesn't exist, remove it from properties
+                            RemoveGameFromProperties(gamePathWithExe);
+                        }
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show($"Error adding game: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+
+                // Save the valid game paths back to application settings
+                Properties.Settings.Default.ManuallyAddedGames = string.Join(",", validGamePaths);
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private static void RemoveGameFromProperties(string gamePathWithExe)
+        {
+            string manuallyAddedGamesString = Properties.Settings.Default.ManuallyAddedGames;
+            if (!string.IsNullOrEmpty(manuallyAddedGamesString))
+            {
+                string[] gamePaths = manuallyAddedGamesString.Split(',');
+                List<string> updatedGamePaths = new List<string>(gamePaths);
+                updatedGamePaths.Remove(gamePathWithExe);
+                Properties.Settings.Default.ManuallyAddedGames = string.Join(",", updatedGamePaths);
+                Properties.Settings.Default.Save();
             }
         }
 

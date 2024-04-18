@@ -46,5 +46,51 @@ namespace DLSSEnabler___Game_Manager.Properties {
                 this["ManuallyAddedGames"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://docs.google.com/spreadsheets/d/1qsvM0uRW-RgAYsOVprDWK2sjCqHnd_1teYAx00_Tw" +
+            "UY/edit#gid=0")]
+        public string GoogleSheetsURI {
+            get {
+                return ((string)(this["GoogleSheetsURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://discord.com/invite/2JDHx6kcXB")]
+        public string DiscordURI {
+            get {
+                return ((string)(this["DiscordURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.nexusmods.com/site/mods/757?tab=description")]
+        public string NexusModsURI {
+            get {
+                return ((string)(this["NexusModsURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://buymeacoffee.com/a.r.t.u.r?t=true")]
+        public string BuyCoffeeURI {
+            get {
+                return ((string)(this["BuyCoffeeURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/Lordubuntu94/DLSSEnabler---Game-Manager")]
+        public string GithubURI {
+            get {
+                return ((string)(this["GithubURI"]));
+            }
+        }
     }
 }

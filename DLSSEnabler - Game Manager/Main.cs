@@ -94,7 +94,7 @@ namespace DLSSEnabler___Game_Manager
         {
             if (sender is ToolStripMenuItem item && item.Text == "Compatibility doc")
             {
-                string uri = ConfigurationManager.AppSettings["GoogleSheetsURI"];
+                string uri = Properties.Settings.Default.GoogleSheetsURI;
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
         }
@@ -104,7 +104,7 @@ namespace DLSSEnabler___Game_Manager
         {
             if (sender is ToolStripMenuItem item && item.Text == "Discord")
             {
-                string uri = ConfigurationManager.AppSettings["DiscordURI"];
+                string uri = Properties.Settings.Default.DiscordURI;
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
         }
@@ -114,7 +114,7 @@ namespace DLSSEnabler___Game_Manager
         {
             if (sender is ToolStripMenuItem item && item.Text == "Nexus Mods")
             {
-                string uri = ConfigurationManager.AppSettings["NexusModsURI"];
+                string uri = Properties.Settings.Default.NexusModsURI;
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
         }
@@ -122,16 +122,16 @@ namespace DLSSEnabler___Game_Manager
         // Handler for opening the Buy Me a Coffee page
         private void BuyCoffee_Click(object sender, EventArgs e)
         {
-            string uri = ConfigurationManager.AppSettings["BuyCoffeeURI"];
+            string uri = Properties.Settings.Default.BuyCoffeeURI;
             Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
         }
 
         // Handler for opening Lordubuntu's GitHub page
         private void GithubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem item && item.Text == "GitHub")
+            if (sender is ToolStripMenuItem item && item.Text == "Github")
             {
-                string uri = ConfigurationManager.AppSettings["GithubURI"];
+                string uri = Properties.Settings.Default.GithubURI;
                 Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
             }
         }

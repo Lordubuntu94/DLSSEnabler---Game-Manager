@@ -8,5 +8,20 @@
     <Setting Name="ManuallyAddedGames" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="GoogleSheetsURI" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://docs.google.com/spreadsheets/d/1qsvM0uRW-RgAYsOVprDWK2sjCqHnd_1teYAx00_TwUY/edit#gid=0</Value>
+    </Setting>
+    <Setting Name="DiscordURI" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://discord.com/invite/2JDHx6kcXB</Value>
+    </Setting>
+    <Setting Name="NexusModsURI" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://www.nexusmods.com/site/mods/757?tab=description</Value>
+    </Setting>
+    <Setting Name="BuyCoffeeURI" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://buymeacoffee.com/a.r.t.u.r?t=true</Value>
+    </Setting>
+    <Setting Name="GithubURI" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/Lordubuntu94/DLSSEnabler---Game-Manager</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
