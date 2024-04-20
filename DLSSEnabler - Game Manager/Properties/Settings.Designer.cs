@@ -92,5 +92,14 @@ namespace DLSSEnabler___Game_Manager.Properties {
                 return ((string)(this["GithubURI"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{78D7CFF5-0378-4902-ADE1-88193389B9F3}")]
+        public string GUID {
+            get {
+                return ((string)(this["GUID"]));
+            }
+        }
     }
 }

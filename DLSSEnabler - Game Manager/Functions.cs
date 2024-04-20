@@ -1,12 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Collections.Specialized;
 
 namespace DLSSEnabler___Game_Manager
 {
@@ -449,13 +449,16 @@ namespace DLSSEnabler___Game_Manager
                     string dxgiPath = Path.Combine(Application.StartupPath, "dxgi.dll");
                     string nvngxIniPath = Path.Combine(Application.StartupPath, "nvngx.ini");
                     string nvngxPath = Path.Combine(Application.StartupPath, "_nvngx.dll");
+                    string libxessPath = Path.Combine(Application.StartupPath, "libxess.dll");
+
                     // Destination paths
                     string destinationDxgiPath = Path.Combine(selectedPath, "dxgi.dll");
                     string destinationNvngxIniPath = Path.Combine(selectedPath, "nvngx.ini");
                     string destinationNvngxPath = Path.Combine(selectedPath, "_nvngx.dll");
+                    string destinationLibxessPath = Path.Combine(selectedPath, "libxess.dll");
 
                     // Check if the files exist
-                    if ((File.Exists(dxgiPath)) && (File.Exists(nvngxIniPath)) && (File.Exists(nvngxPath)))
+                    if (File.Exists(dxgiPath) && File.Exists(nvngxIniPath) && File.Exists(nvngxPath) && File.Exists(libxessPath))
                     {
                         // Move the files to the selected folder
                         File.Copy(dxgiPath, destinationDxgiPath, true);
@@ -465,12 +468,23 @@ namespace DLSSEnabler___Game_Manager
                         {
                             File.Copy(nvngxPath, destinationNvngxPath, true);
                         }
+
+                        // Check if libxess.dll already exists in the destination folder
+                        if (File.Exists(destinationLibxessPath))
+                        {
+                            // Rename the existing libxess.dll to libxess.dll.org
+                            File.Move(destinationLibxessPath, Path.Combine(selectedPath, "libxess.dll.org"));
+                        }
+
+                        // Move libxess.dll to the destination folder
+                        File.Copy(libxessPath, destinationLibxessPath, true);
+
                         MessageBox.Show("Installation successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         listView1.SelectedItems[0].BackColor = Color.LightGreen;
                     }
                     else
                     {
-                        MessageBox.Show("Installation's files are missing from the mod folder.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Installation files are missing from the mod folder.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 catch (Exception ex)
@@ -484,7 +498,7 @@ namespace DLSSEnabler___Game_Manager
             }
         }
 
-        // Function to uninstall mod files for the selected game
+
         public static void ModUninstall(ListView listView1)
         {
             // Check if a game is selected in the ListView
@@ -499,6 +513,8 @@ namespace DLSSEnabler___Game_Manager
                     string dxgiPath = Path.Combine(selectedPath, "dxgi.dll");
                     string nvngxIniPath = Path.Combine(selectedPath, "nvngx.ini");
                     string nvngxPath = Path.Combine(selectedPath, "_nvngx.dll");
+                    string libxessPath = Path.Combine(selectedPath, "libxess.dll");
+                    string libxessOrgPath = Path.Combine(selectedPath, "libxess.dll.org");
 
                     // Remove dxgi.dll if exists
                     if (File.Exists(dxgiPath))
@@ -518,6 +534,18 @@ namespace DLSSEnabler___Game_Manager
                         File.Delete(nvngxPath);
                     }
 
+                    // Remove libxess.dll if exists
+                    if (File.Exists(libxessPath))
+                    {
+                        File.Delete(libxessPath);
+                    }
+
+                    // Rename libxess.dll.org to libxess.dll if exists
+                    if (File.Exists(libxessOrgPath))
+                    {
+                        File.Move(libxessOrgPath, libxessPath);
+                    }
+
                     MessageBox.Show("Uninstallation successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     listView1.SelectedItems[0].BackColor = Color.Empty;
                 }
@@ -531,6 +559,8 @@ namespace DLSSEnabler___Game_Manager
                 MessageBox.Show("Select a game from the list before uninstalling the mod.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
+
 
         // Function to filter and display games based on search text
         public void ResearchGame(ListView listView1, TextBox searchBox)
@@ -690,34 +720,40 @@ namespace DLSSEnabler___Game_Manager
                 bool hasDxgiDll = File.Exists(Path.Combine(path, "dxgi.dll"));
                 bool hasNvngxIni = File.Exists(Path.Combine(path, "nvngx.ini"));
                 bool hasNvngxDll = File.Exists(Path.Combine(path, "_nvngx.dll"));
+                bool hasLibxessDll = File.Exists(Path.Combine(path, "libxess.dll"));
 
                 // Paths of the files to move
                 string dxgiPath = Path.Combine(Application.StartupPath, "dxgi.dll");
                 string nvngxIniPath = Path.Combine(Application.StartupPath, "nvngx.ini");
                 string nvngxPath = Path.Combine(Application.StartupPath, "_nvngx.dll");
+                string libxessPath = Path.Combine(Application.StartupPath, "libxess.dll");
 
                 // Destination paths
                 string destinationDxgiPath = Path.Combine(path, "dxgi.dll");
                 string destinationNvngxIniPath = Path.Combine(path, "nvngx.ini");
                 string destinationNvngxPath = Path.Combine(path, "_nvngx.dll");
+                string destinationLibxessPath = Path.Combine(path, "libxess.dll");
 
-                // If all three files are present, copies the mod files to the target directory
-                if ((hasDxgiDll && hasNvngxIni && hasNvngxDll))
+                // If all four files are present, copies the mod files to the target directory
+                if (hasDxgiDll && hasNvngxIni && hasNvngxDll && hasLibxessDll)
                 {
                     File.Copy(dxgiPath, destinationDxgiPath, true);
                     File.Copy(nvngxIniPath, destinationNvngxIniPath, true);
                     File.Copy(nvngxPath, destinationNvngxPath, true);
+                    File.Copy(libxessPath, destinationLibxessPath, true);
                 }
                 // If only dxgi.dll and nvngx.ini are present, copies these two mod files
-                else if (hasDxgiDll && hasNvngxIni)
+                else if (hasDxgiDll && hasNvngxIni && hasLibxessDll)
                 {
                     File.Copy(dxgiPath, destinationDxgiPath, true);
                     File.Copy(nvngxIniPath, destinationNvngxIniPath, true);
+                    File.Copy(libxessPath, destinationLibxessPath, true);
                 }
             }
             // Notifies the user that the update was successful
             MessageBox.Show("Update successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
 
         // Function to enable double-clicking on a game path to open the full directory
         public static void AddClickablePaths(ListView listView)

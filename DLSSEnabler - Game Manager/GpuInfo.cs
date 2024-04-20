@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Management;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace DLSSEnabler___Game_Manager
 {

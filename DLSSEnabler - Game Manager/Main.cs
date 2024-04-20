@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -9,21 +8,17 @@ namespace DLSSEnabler___Game_Manager
 {
     public partial class Main : Form
     {
-        // Set flag to check red highlight for games with mod not updated
+        // Flag to check red highlight for games with mod not updated
         readonly bool checkUpdate = false;
         public Main()
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            // Set the ListView to display items in details view
             listView1.View = View.Details;
-            // Set the width of the columns in the ListView
             listView1.Columns.Add("Game", -2, HorizontalAlignment.Left);
-            // Set the size of icons in the ImageList
             imageList1.ImageSize = new Size(32, 32);
             sortBox.SelectedItem = "Sort A - Z";
             dlssEnVer.Text = Properties.Settings.Default.DLSSVersion;
-
         }
 
         // Main
@@ -199,9 +194,24 @@ namespace DLSSEnabler___Game_Manager
 
             if (DialogResult == DialogResult.Yes)
             {
-                Application.Restart();
+                Process.Start(Application.ExecutablePath);
+                Application.Exit();
             }
 
+        }
+
+        private void ResetManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult = MessageBox.Show("The application will be reset to default settings and you will lost the current configurations. Are you sure?", "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (DialogResult == DialogResult.Yes)
+            {
+                Properties.Settings.Default.Reset();
+                Properties.Settings.Default.Save();
+
+                Process.Start(Application.ExecutablePath);
+                Application.Exit();
+            }
         }
     }
 }

@@ -56,6 +56,7 @@
             this.buyCoffee = new System.Windows.Forms.PictureBox();
             this.sortBox = new System.Windows.Forms.ComboBox();
             this.dlssEnVer = new System.Windows.Forms.Label();
+            this.resetManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.buyCoffee)).BeginInit();
             this.SuspendLayout();
@@ -248,7 +249,8 @@
             // extraToolStripMenuItem
             // 
             this.extraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkForUpdatesToolStripMenuItem});
+            this.checkForUpdatesToolStripMenuItem,
+            this.resetManagerToolStripMenuItem});
             this.extraToolStripMenuItem.Name = "extraToolStripMenuItem";
             this.extraToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
             this.extraToolStripMenuItem.Text = "Extra";
@@ -256,7 +258,7 @@
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
             // 
@@ -293,6 +295,13 @@
             this.dlssEnVer.Size = new System.Drawing.Size(293, 13);
             this.dlssEnVer.TabIndex = 14;
             this.dlssEnVer.Text = "version not found - place the manager near the README file";
+            // 
+            // resetManagerToolStripMenuItem
+            // 
+            this.resetManagerToolStripMenuItem.Name = "resetManagerToolStripMenuItem";
+            this.resetManagerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetManagerToolStripMenuItem.Text = "Reset Manager";
+            this.resetManagerToolStripMenuItem.Click += new System.EventHandler(this.ResetManagerToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -356,6 +365,7 @@
         private System.Windows.Forms.ToolStripMenuItem githubToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetManagerToolStripMenuItem;
     }
 }
 
