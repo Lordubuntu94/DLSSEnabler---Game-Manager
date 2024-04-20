@@ -516,38 +516,46 @@ namespace DLSSEnabler___Game_Manager
                     string libxessPath = Path.Combine(selectedPath, "libxess.dll");
                     string libxessOrgPath = Path.Combine(selectedPath, "libxess.dll.org");
 
-                    // Remove dxgi.dll if exists
-                    if (File.Exists(dxgiPath))
+                    if (listView1.SelectedItems[0].SubItems[0].BackColor == Color.LightGreen)
                     {
-                        File.Delete(dxgiPath);
+                        // Remove dxgi.dll if exists
+                        if (File.Exists(dxgiPath))
+                        {
+                            File.Delete(dxgiPath);
+                        }
+
+                        // Remove nvngx.ini if exists
+                        if (File.Exists(nvngxIniPath))
+                        {
+                            File.Delete(nvngxIniPath);
+                        }
+
+                        // Remove _nvngx.dll if exists
+                        if (File.Exists(nvngxPath))
+                        {
+                            File.Delete(nvngxPath);
+                        }
+
+                        // Remove libxess.dll and restore the original if the game had it before the mod
+                        if (File.Exists(libxessOrgPath) && File.Exists(libxessPath))
+                        {
+                            File.Delete(libxessPath);
+                            File.Move(libxessOrgPath, libxessPath);
+
+                        }
+                        else
+                        {
+                            File.Delete(libxessPath);
+                        }
+
+                        MessageBox.Show("Uninstallation successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        listView1.SelectedItems[0].BackColor = Color.Empty;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Can't disable a game that is not modded!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
-                    // Remove nvngx.ini if exists
-                    if (File.Exists(nvngxIniPath))
-                    {
-                        File.Delete(nvngxIniPath);
-                    }
-
-                    // Remove _nvngx.dll if exists
-                    if (File.Exists(nvngxPath))
-                    {
-                        File.Delete(nvngxPath);
-                    }
-
-                    // Remove libxess.dll if exists
-                    if (File.Exists(libxessPath))
-                    {
-                        File.Delete(libxessPath);
-                    }
-
-                    // Rename libxess.dll.org to libxess.dll if exists
-                    if (File.Exists(libxessOrgPath))
-                    {
-                        File.Move(libxessOrgPath, libxessPath);
-                    }
-
-                    MessageBox.Show("Uninstallation successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    listView1.SelectedItems[0].BackColor = Color.Empty;
                 }
                 catch (Exception ex)
                 {
