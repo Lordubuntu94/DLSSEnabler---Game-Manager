@@ -77,7 +77,7 @@ namespace DLSSEnabler___Game_Manager.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://buymeacoffee.com/a.r.t.u.r?t=true")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://buymeacoffee.com/a.r.t.u.r")]
         public string BuyCoffeeURI {
             get {
                 return ((string)(this["BuyCoffeeURI"]));
@@ -93,12 +93,27 @@ namespace DLSSEnabler___Game_Manager.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{78D7CFF5-0378-4902-ADE1-88193389B9F3}")]
-        public string GUID {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HiddenPaths {
             get {
-                return ((string)(this["GUID"]));
+                return ((string)(this["HiddenPaths"]));
+            }
+            set {
+                this["HiddenPaths"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DLSS3Games {
+            get {
+                return ((string)(this["DLSS3Games"]));
+            }
+            set {
+                this["DLSS3Games"] = value;
             }
         }
     }

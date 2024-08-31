@@ -105,7 +105,7 @@ namespace DLSSEnabler___Game_Manager
                             if (checkVersion < requiredVersion)
                             {
                                 MessageBox.Show("The mod version is older than 2.90.700. Download the latest version to continue.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                Application.Exit(); // Esci direttamente dall'applicazione
+                                Application.Exit(); // Exit application
                             }
                             else
                             {

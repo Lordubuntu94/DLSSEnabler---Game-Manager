@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Management;
@@ -19,73 +20,87 @@ namespace DLSSEnabler___Game_Manager
 
     internal static class GpuHelper
     {
+        private static readonly string[] IntegratedNameKeywords =
+        {
+            "Intel(R) HD Graphics", "AMD Radeon HD"
+        };
+
         public static GpuInfo GetPrimaryGpuInfo()
         {
-            GpuInfo gpuInfo = new GpuInfo();
+            GpuInfo gpuInfo = null;
+            List<GpuInfo> integratedGpus = new List<GpuInfo>();
 
             try
             {
-                // Query WMI to retrieve information about video controllers
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
-                foreach (ManagementObject obj in searcher.Get().OfType<ManagementObject>())
+                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController"))
                 {
-                    // Get the name of the GPU
-                    gpuInfo.Name = obj["Name"]?.ToString();
-
-                    // Convert AdapterRAM value to ulong
-                    object adapterRAMValue = obj["AdapterRAM"];
-                    gpuInfo.AdapterRAM = (adapterRAMValue != null) ? Convert.ToUInt64(adapterRAMValue) : 0;
-
-                    // Check if the GPU is primary
-                    object adapterCompatibilityValue = obj["AdapterCompatibility"];
-                    if (adapterCompatibilityValue != null && adapterCompatibilityValue.ToString().Equals("Primary"))
+                    foreach (ManagementObject obj in searcher.Get().OfType<ManagementObject>())
                     {
-                        // Found primary GPU, break the loop
-                        break;
+                        string gpuName = obj["Name"]?.ToString();
+                        ulong gpuAdapterRAM = GetAdapterRAM(obj);
+
+                        bool isIntegrated = IsIntegratedGpu(gpuName);
+
+                        if (!isIntegrated && gpuAdapterRAM > 0)
+                        {
+                            gpuInfo = new GpuInfo { Name = gpuName, AdapterRAM = gpuAdapterRAM };
+                            if (obj["AdapterCompatibility"]?.ToString() == "Primary")
+                            {
+                                break;
+                            }
+                        }
+                        else if (isIntegrated)
+                        {
+                            integratedGpus.Add(new GpuInfo { Name = gpuName, AdapterRAM = gpuAdapterRAM });
+                        }
                     }
+
+                    gpuInfo = gpuInfo ?? integratedGpus.OrderByDescending(g => g.AdapterRAM).FirstOrDefault();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Log the error or handle it silently
+                // Log the error (consider using a logger library)
+                Console.WriteLine("Error during GPU information retrieval: " + ex.Message);
             }
 
             return gpuInfo;
         }
+
+        private static ulong GetAdapterRAM(ManagementObject obj)
+        {
+            object adapterRAMValue = obj["AdapterRAM"];
+            return adapterRAMValue != null && !string.IsNullOrEmpty(adapterRAMValue.ToString()) ?
+                Convert.ToUInt64(adapterRAMValue) : 0;
+        }
+
+        private static bool IsIntegratedGpu(string gpuName)
+        {
+            return gpuName == null ||
+                   IntegratedNameKeywords.Any(keyword => gpuName.Contains(keyword)) ||
+                   gpuName.Contains("Graphics");
+        }
+
     }
 
     internal static class GpuInfoManager
     {
         public static void FindGpuArchitecture(Label GPUlabel)
         {
-            // Retrieve information about the primary GPU
             GpuInfo gpuInfo = GpuHelper.GetPrimaryGpuInfo();
 
-            // Set label text and color based on GPU architecture
-            if (!string.IsNullOrEmpty(gpuInfo.Name) && gpuInfo.AdapterRAM > 0)
+            if (gpuInfo != null && !string.IsNullOrEmpty(gpuInfo.Name) && gpuInfo.AdapterRAM > 0)
             {
-                if (gpuInfo.Name.Contains("AMD") || gpuInfo.Name.Contains("Radeon"))
-                {
-                    GPUlabel.Text = gpuInfo.Name;
-                    GPUlabel.ForeColor = Color.Red; // Set color to red for AMD GPUs
-                }
-                else if (gpuInfo.Name.Contains("NVIDIA"))
-                {
-                    GPUlabel.Text = gpuInfo.Name;
-                    GPUlabel.ForeColor = Color.Green; // Set color to green for NVIDIA GPUs
-                }
-                else if (gpuInfo.Name.Contains("Intel"))
-                {
-                    GPUlabel.Text = gpuInfo.Name;
-                    GPUlabel.ForeColor = Color.Blue; // Set color to blue for Intel GPUs
-                }
+                GPUlabel.Text = gpuInfo.Name;
+                GPUlabel.ForeColor = gpuInfo.Name.Contains("AMD") || gpuInfo.Name.Contains("Radeon") ? Color.Red :
+                                      gpuInfo.Name.Contains("NVIDIA") ? Color.Green :
+                                      Color.Blue; // Set blue for Intel or unknown
             }
             else
             {
-                GPUlabel.Text = gpuInfo.Name;
-                GPUlabel.ForeColor = Color.Black; // Set color to black if GPU information is not available
+                GPUlabel.Text = gpuInfo?.Name ?? "GPU Information Unavailable";
+                GPUlabel.ForeColor = Color.Black;
             }
         }
     }
 }
-

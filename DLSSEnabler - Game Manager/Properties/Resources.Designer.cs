@@ -113,9 +113,9 @@ namespace DLSSEnabler___Game_Manager.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap notepad {
+        internal static System.Drawing.Bitmap loading {
             get {
-                object obj = ResourceManager.GetObject("notepad", resourceCulture);
+                object obj = ResourceManager.GetObject("loading", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

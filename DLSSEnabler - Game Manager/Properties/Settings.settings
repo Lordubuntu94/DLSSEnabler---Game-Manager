@@ -23,8 +23,11 @@
     <Setting Name="GithubURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://github.com/Lordubuntu94/DLSSEnabler---Game-Manager</Value>
     </Setting>
-    <Setting Name="GUID" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">{78D7CFF5-0378-4902-ADE1-88193389B9F3}</Value>
+    <Setting Name="HiddenPaths" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DLSS3Games" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

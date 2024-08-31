@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Modificare i valori di questi attributi per modificare le informazioni
 // associate a un assembly.
-[assembly: AssemblyTitle("DLSSEnabler - Game Manager")]
-[assembly: AssemblyDescription("A simple manager to install the DLSSEnabler mod made by Artur")]
+[assembly: AssemblyTitle("DLSS Enabler - Game Manager")]
+[assembly: AssemblyDescription("A simple manager to install the DLSS Enabler mod made by Artur")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DLSSEnabler")]
-[assembly: AssemblyProduct("DLSSEnabler - Game Manager")]
+[assembly: AssemblyProduct("DLSS Enabler - Game Manager")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("Lordubuntu")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(true)]
 
 // Se il progetto viene esposto a COM, il GUID seguente verrà utilizzato come ID della libreria dei tipi
-[assembly: Guid("a1ce9c86-173c-47f4-8f46-9d66ec1fed49")]
+[assembly: Guid("E9C4FB33-F255-4496-BB78-1280E7F8F332")]
 
 // Le informazioni sulla versione di un assembly sono costituite dai seguenti quattro valori:
 //

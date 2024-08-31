@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DLSSEnabler___Game_Manager
@@ -21,26 +24,110 @@ namespace DLSSEnabler___Game_Manager
             dlssEnVer.Text = Properties.Settings.Default.DLSSVersion;
         }
 
+        private async Task LoadGamesAsync()
+        {
+            await LoadSteamGamesAsync();
+            await LoadEpicGamesLauncherGamesAsync();
+            await LoadGOGGalaxyGamesAsync();
+            await LoadEAGamesAsync();
+            await LoadUbisoftGamesAsync();
+            await LoadBattleNetGamesAsync();
+        }
+
+        private async Task LoadSteamGamesAsync()
+        {
+            await Functions.FindSteamGames(listView1, imageList1);
+            this.Invoke((Action)(() =>
+            {
+                listView1.Refresh(); // Update the UI after loading Steam games
+            }));
+        }
+
+        private async Task LoadEpicGamesLauncherGamesAsync()
+        {
+            await Functions.FindEpicGamesLauncherGames(listView1, imageList1);
+            this.Invoke((Action)(() =>
+            {
+                listView1.Refresh(); // Update the UI after loading Epic games
+            }));
+        }
+
+        private async Task LoadGOGGalaxyGamesAsync()
+        {
+            await Functions.FindGOGGalaxyGames(listView1, imageList1);
+            this.Invoke((Action)(() =>
+            {
+                listView1.Refresh(); // Update the UI after loading GOG games
+            }));
+        }
+
+        private async Task LoadEAGamesAsync()
+        {
+            await Functions.FindEAGames(listView1, imageList1);
+            this.Invoke((Action)(() =>
+            {
+                listView1.Refresh(); // Update the UI after loading EA games
+            }));
+        }
+
+        private async Task LoadUbisoftGamesAsync()
+        {
+            await Functions.FindUbisoftGames(listView1, imageList1);
+            this.Invoke((Action)(() =>
+            {
+                listView1.Refresh(); // Update the UI after loading Ubisoft games
+            }));
+        }
+
+        private async Task LoadBattleNetGamesAsync()
+        {
+            await Functions.FindBattleNetGames(listView1, imageList1);
+            this.Invoke((Action)(() =>
+            {
+                listView1.Refresh(); // Update the UI after loading Battle.net games
+            }));
+        }
+
         // Main
-        private void Main_Load(object sender, EventArgs e)
+        private async void Main_Load(object sender, EventArgs e)
         {
             // Call the function to find GPU and update the GPU label
             GpuInfoManager.FindGpuArchitecture(GPUlabel);
-            // Call the function to find Steam games and populate the ListView
-            Functions.FindSteamGames(listView1, imageList1);
-            // Call the function to find Epic games and populate the ListView
-            Functions.FindEpicGamesLauncherGames(listView1, imageList1);
-            // Call the function to find GoG games and populate the ListView
-            Functions.FindGOGGalaxyGames(listView1, imageList1);
+
+            // Show the loading GIF
+            listView1.Visible = false;
+            pictureBox1.Visible = true;
+
+            // Run the game loading process on a separate thread
+            await Task.Run(async () =>
+            {
+                await LoadGamesAsync();
+            });
+
+            // Update the UI after loading is complete
+            this.Invoke((Action)(() =>
+            {
+                listView1.Visible = true;
+                pictureBox1.Visible = false;
+            }));
+
             // Call the function to initialize manually added games
             Functions.InitializeManuallyAddedGames(listView1, imageList1);
+
             // Call the function to remove sub paths
             Functions functions = new Functions();
+            Functions.RemoveDuplicatePaths(listView1);
             functions.CleanSubPaths(listView1);
+
             // Add clickable folders
             Functions.AddClickablePaths(listView1);
+
             // Call function to highlight modded games
             functions.ScanAndHighlightPaths(listView1, checkUpdate);
+
+            // Clean blacklisted paths
+            HidePathsFromBlacklist();
+
             // Initialize the game list and search functionality
             functions.InitializeGameListAndSearch(listView1, searchBox);
 
@@ -54,6 +141,7 @@ namespace DLSSEnabler___Game_Manager
                 CheckVersion.CheckForNewVersion(dlssEnVer, listView1);
             }
         }
+
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -132,14 +220,17 @@ namespace DLSSEnabler___Game_Manager
         }
 
 
-
+        /*
+        // Edit nvngx.ini file function
         private void EditIni_Click(object sender, EventArgs e)
         {
             // Call the function to customize DLSS settings
             Functions functions = new Functions();
             functions.CustomizeDLSS(listView1);
         }
+        */
 
+        // Sort game paths
         private void SortBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sortBox.Text.Equals("Sort A - Z"))
@@ -188,6 +279,7 @@ namespace DLSSEnabler___Game_Manager
             }
         }
 
+        // Function to restart the application so can check again for new versions
         private void CheckForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult = MessageBox.Show("The application will be restarted. Are you sure?", "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -200,6 +292,7 @@ namespace DLSSEnabler___Game_Manager
 
         }
 
+        // Function to reset custom games added
         private void ResetManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult = MessageBox.Show("The application will be reset to default settings and you will lost the current configurations. Are you sure?", "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -213,5 +306,105 @@ namespace DLSSEnabler___Game_Manager
                 Application.Exit();
             }
         }
+
+
+        private void HidePathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                var selectedItem = listView1.SelectedItems[0];
+                string pathToHide = selectedItem.SubItems[0].Text;
+
+                // Nascondi l'elemento dalla ListView
+                listView1.Items.Remove(selectedItem);
+
+                // Aggiungi alla blacklist
+                AddPathToBlacklist(pathToHide);
+            }
+        }
+
+        private void AddPathToBlacklist(string path)
+        {
+            // Carica la lista dei path nascosti dalle impostazioni
+            List<string> hiddenPaths = Properties.Settings.Default.HiddenPaths?.Split(',').ToList() ?? new List<string>();
+
+            // Aggiungi il nuovo path alla lista solo se non è già presente
+            if (!hiddenPaths.Contains(path))
+            {
+                hiddenPaths.Add(path);
+
+                // Salva la lista aggiornata di path nascosti come stringa
+                Properties.Settings.Default.HiddenPaths = string.Join(",", hiddenPaths);
+
+                // Salva le impostazioni
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void HidePathsFromBlacklist()
+        {
+            // Carica la lista dei path nascosti dalle impostazioni
+            List<string> hiddenPaths = Properties.Settings.Default.HiddenPaths?.Split(',').ToList() ?? new List<string>();
+
+            // Cicla attraverso gli elementi della ListView
+            foreach (ListViewItem item in listView1.Items)
+            {
+                // Ottiene il path corrente dall'elemento della ListView
+                string currentPath = item.SubItems[0].Text;
+
+                // Se il path corrente è presente nella lista dei path nascosti, nascondilo
+                if (hiddenPaths.Contains(currentPath))
+                {
+                    item.Remove(); // Rimuove l'elemento dalla ListView
+                }
+            }
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            Functions.FindGamesInCustomFolder(listView1, imageList1);
+            Functions functions = new Functions();
+            // Call the function to remove duplicate paths
+            Functions.RemoveDuplicatePaths(listView1);
+            // Call the function to remove sub paths
+            functions.CleanSubPaths(listView1);
+            // Add clickable folders
+            Functions.AddClickablePaths(listView1);
+            // Call function to highlight modded games
+            functions.ScanAndHighlightPaths(listView1, checkUpdate);
+            // Clean blacklisted paths
+            HidePathsFromBlacklist();
+            // Initialize the game list and search functionality
+            functions.InitializeGameListAndSearch(listView1, searchBox);
+        }
+
+        /*
+        private void showOnlyDLSS3GamesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string dlss3games = Properties.Settings.Default.DLSS3Games;
+            string[] dlss3gamesArray = dlss3games.Split(',');
+
+            foreach (string currentGame in dlss3gamesArray)
+            {
+                string gameName = currentGame.Trim();
+
+                foreach (ListViewItem item in listView1.Items)
+                {
+                    string itemName = item.Text;
+
+                    // Controlla se il nome del gioco è contenuto nel testo dell'elemento della ListView
+                    if (itemName.IndexOf(gameName, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        MessageBox.Show($"Trovato un gioco DLSS3: {gameName}", "Gioco DLSS3 Trovato", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break; // Esci dal ciclo interno una volta trovato un gioco DLSS3
+                    }
+                }
+            }
+        }
+        */
+
+
+
+
     }
 }

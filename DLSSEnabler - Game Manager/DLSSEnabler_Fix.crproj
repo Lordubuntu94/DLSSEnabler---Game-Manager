@@ -1,0 +1,11 @@
+<project outputDir="C:\Users\luigi\source\repos\DLSSEnabler - Game Manager\DLSSEnabler - Game Manager\bin\x64\Release\app.publish\Confuser" baseDir="C:\Users\luigi\source\repos\DLSSEnabler - Game Manager\DLSSEnabler - Game Manager\bin\x64\Release\app.publish" xmlns="http://confuser.codeplex.com">
+  <module path="DLSSEnabler-GameManager.exe">
+    <rule pattern="true">
+      <protection id="constants" />
+      <protection id="ctrl flow" />
+      <protection id="ref proxy" />
+      <protection id="anti ildasm" />
+      <protection id="rename" />
+    </rule>
+  </module>
+</project>

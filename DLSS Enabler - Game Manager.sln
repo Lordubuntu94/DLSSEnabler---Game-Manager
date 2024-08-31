@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLSSEnabler - Game Manager", "DLSSEnabler - Game Manager\DLSSEnabler - Game Manager.csproj", "{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLSS Enabler - Game Manager", "DLSSEnabler - Game Manager\DLSS Enabler - Game Manager.csproj", "{A1CE9C86-173C-47F4-8F46-9D66EC1FED49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
